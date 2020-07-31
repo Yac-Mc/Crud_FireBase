@@ -13,12 +13,12 @@
 
     <div class="col">
 
-        <form [formGroup]="form">
+        <form [formGroup]="form" (ngSubmit)="guardar()">
 
             <div class="form-group">
 
                 <label>Firebase ID</label>
-                <input type="text" class="form-control" placeholder="Firebase ID" disabled="disabled">
+                <input type="text" class="form-control" placeholder="Firebase ID" [attr.disabled]="true" formControlName="id">
                 <small class="form-text text-muted">Este campo es autogenerado</small>
 
             </div>
@@ -41,12 +41,13 @@
 
                 <label>Estado</label>
                 <br>
-                <button class="btn btn-outline-success w-50" type="button">
+
+                <button *ngIf="flagVivo" class="btn btn-outline-success w-50" type="button" (click)="changes('vivo')">
                     <i class="fa fa-smile-wink"></i>
                     Vivo
                 </button>
 
-                <button class="btn btn-outline-danger w-50" type="button">
+                <button *ngIf="!flagVivo" class="btn btn-outline-danger w-50" type="button" (click)="changes('vivo')">
                     <i class="fa fa-dizzy"></i>
                     Muerto
                 </button>
