@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { HeroModel } from '../../../models/heroe.model';
+import { ActivatedRoute } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+
+import { HeroeModel } from '../../../models/heroe.model';
 import { HeroesService } from '../../../services/heroes.service';
 
-import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -15,13 +17,26 @@ export class HeroeComponent implements OnInit {
 
   form: FormGroup;
   flagVivo = true;
-  heroe = new HeroModel();
+  heroe = new HeroeModel();
 
-  constructor(private formBuilder: FormBuilder, private heroesService: HeroesService) {
+  constructor(private formBuilder: FormBuilder, private heroesService: HeroesService, private route: ActivatedRoute) {
     this.crearFormulario();
   }
 
   ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (id !== 'nuevo'){
+
+      this.heroesService.getHeroe(id).subscribe((resp: HeroeModel) => {
+        this.flagVivo = resp.vivo;
+        this.form.get('id').setValue(id);
+        this.form.get('nombre').setValue(resp.nombre);
+        this.form.get('poder').setValue(resp.poder);
+        this.form.get('vivo').setValue(resp.vivo);
+      });
+    }
+
   }
 
   crearFormulario(){
@@ -62,13 +77,13 @@ export class HeroeComponent implements OnInit {
 
     peticion.subscribe(resp => {
 
-      this.form.setValue(resp);
-
       Swal.fire({
         title: resp.nombre,
         text: 'Se acxtualizó correctamente',
         icon: 'success'
       });
+
+      this.form.setValue(resp);
 
     });
   }
