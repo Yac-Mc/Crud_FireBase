@@ -83,7 +83,15 @@ export class HeroeComponent implements OnInit {
         icon: 'success'
       });
 
-      this.form.setValue(resp);
+      if (this.form.get('id').value){
+
+        this.form.get('nombre').setValue(resp.nombre);
+        this.form.get('poder').setValue(resp.poder);
+        this.form.get('vivo').setValue(resp.vivo);
+
+      } else {
+        this.form.setValue(resp);
+      }
 
     });
   }
